@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "250802350257",
+    "project_id": "solarconnect-a8316",
+    "storage_bucket": "solarconnect-a8316.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250802350257:android:e1c8f919b48da07fe31a90",
+        "android_client_info": {
+          "package_name": "com.example.solarconnect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqZX-RrvrDPfl-rlOoqFssNCFqgKZWrm4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
