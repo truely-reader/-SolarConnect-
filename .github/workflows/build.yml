@@ -15,18 +15,25 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Set up Flutter 3.24.5
+      - name: Set up Flutter 3.22.3
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.24.5'
+          flutter-version: '3.22.3'
+
+      - name: Fix Groovy Bug
+        run: |
+          FILE=$(find /opt/hostedtoolcache -name "flutter.groovy" | head -n 1)
+          echo "Patching $FILE"
+          sed -i 's/import groovy.xml.QName//g' "$FILE"
+          sed -i 's/QName//g' "$FILE"
 
       - name: Get dependencies
         run: |
           flutter clean
           flutter pub get
 
-      - name: Build APK Debug
+      - name: Build APK
         run: flutter build apk --debug
 
       - name: Upload APK
