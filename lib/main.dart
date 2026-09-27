@@ -5,9 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(SolarConnectApp());
-}
+  try {
+    await Firebase.initializeApp();
+  } catch(e) {
+    print("Firebase init failed: $e");
+  }
 
 class UserAcc {
   String name, email, pass, houseName, phone, address, solarType;
