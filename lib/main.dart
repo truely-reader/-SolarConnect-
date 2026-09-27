@@ -10,6 +10,8 @@ void main() async {
   } catch(e) {
     print("Firebase init failed: $e");
   }
+  runApp(SolarConnectApp());
+}
 
 class UserAcc {
   String name, email, pass, houseName, phone, address, solarType;
@@ -199,7 +201,7 @@ class CommunityTab extends StatelessWidget {
         if(!snap.hasData) return Center(child: CircularProgressIndicator());
         return ListView(padding: EdgeInsets.all(16), children: [
           Text("Community ${snap.data!.docs.length} houses", style: TextStyle(fontWeight: FontWeight.bold)),
-         ...snap.data!.docs.map((doc){
+        ...snap.data!.docs.map((doc){
             var d=doc.data() as Map<String,dynamic>;
             return Card(child: ListTile(title: Text(d['houseName']?? ''), subtitle: Text("${d['solarType']} | ${d['address']}"), trailing: Text(d['email'])));
           }).toList()
@@ -238,13 +240,14 @@ class _AnalyticsTabState extends State<AnalyticsTab> with SingleTickerProviderSt
         ]),
         SizedBox(height: 12),
         Text("House Performance", style: TextStyle(fontWeight: FontWeight.bold)),
-      ...readings.map((r){ Color c=r.status=="NORMAL"? Colors.green : r.status=="WARNING"? Colors.orange : Colors.red; return Card(child: Padding(padding: EdgeInsets.all(12), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(currentUser!.houseName, style: TextStyle(fontWeight: FontWeight.bold)), Text("${r.perf.toStringAsFixed(1)}%", style: TextStyle(color: c))]), SizedBox(height: 6), ClipRRect(borderRadius: BorderRadius.circular(4), child: LinearProgressIndicator(value: r.perf/100, color: c, minHeight: 8))] ))); }).toList()
+     ...readings.map((r){ Color c=r.status=="NORMAL"? Colors.green : r.status=="WARNING"? Colors.orange : Colors.red; return Card(child: Padding(padding: EdgeInsets.all(12), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(currentUser!.houseName, style: TextStyle(fontWeight: FontWeight.bold)), Text("${r.perf.toStringAsFixed(1)}%", style: TextStyle(color: c))]), SizedBox(height: 6), ClipRRect(borderRadius: BorderRadius.circular(4), child: LinearProgressIndicator(value: r.perf/100, color: c, minHeight: 8))] ))); }).toList()
       ]))
     ]);
   }
 }
 class _LineChartPainter extends CustomPainter {
-  final List<double> data; _LineChartPainter(this.data);
+  final List<double> data;
+  _LineChartPainter(this.data);
   @override void paint(Canvas canvas, Size size){
     if(data.isEmpty) return;
     double maxVal=data.reduce((a,b)=> a>b? a:b)*1.2; if(maxVal==0) maxVal=1;
@@ -252,7 +255,8 @@ class _LineChartPainter extends CustomPainter {
     Paint fillPaint=Paint()..color=Color(0xFF2E7D32).withOpacity(0.15)..style=PaintingStyle.fill;
     Path linePath=Path(); Path fillPath=Path();
     for(int i=0;i<data.length;i++){
-      double x=(i/(data.length-1))*size.width; double y=size.height-(data[i]/maxVal)*size.height;
+      double x=(data.length==1)? size.width/2 : (i/(data.length-1))*size.width;
+      double y=size.height-(data[i]/maxVal)*size.height;
       if(i==0){ linePath.moveTo(x,y); fillPath.moveTo(x,size.height); fillPath.lineTo(x,y); }
       else{ linePath.lineTo(x,y); fillPath.lineTo(x,y); }
       if(i==data.length-1){ fillPath.lineTo(x,size.height); fillPath.close(); }
